@@ -43,20 +43,17 @@ app.post('/signin', (req, res) => {
     req.session.suzie = result._id
     res.status(200).send()
   }).catch((err) => {
-    console.log(err)
     res.status(400).send({err})
   })
 })
 
 app.post('/getme', (req, res) => {
-  console.log(req.session)
   if(req.session.suzie) {
-    User.getUser(req.session.suzie).then((result) => {
-      if(!result.err) {
-        res.send(result)
+    User.getUser(req.session.suzie).then((userInfo) => {
+      if(!userInfo.err) {
+        res.send({userInfo})
       }
     }).catch((err) => {
-      console.log(err)
       res.status(400).send()
     })
   } else {
