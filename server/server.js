@@ -5,6 +5,7 @@ const _ = require('lodash')
 
 let {mongoose} = require('./db/mongoose')
 let {User} = require('./models/user')
+let {checkAuth} = require('./middleware/auth')
 
 let app = express()
 
@@ -47,18 +48,19 @@ app.post('/signin', (req, res) => {
   })
 })
 
-app.post('/getme', (req, res) => {
-  if(req.session.suzie) {
-    User.getUser(req.session.suzie).then((userInfo) => {
-      if(!userInfo.err) {
-        res.send({userInfo})
-      }
-    }).catch((err) => {
-      res.status(400).send()
-    })
-  } else {
-    res.status(403).send()
-  }
+app.post('/signout', checkAuth, (req, res) => {
+  req.session.destroy()
+  res.status(200).send()
+})
+
+app.post('/getme', checkAuth, (req, res) => {
+  User.getUser(req.session.suzie).then((userInfo) => {
+    if(!userInfo.err) {
+      res.send({userInfo})
+    }
+  }).catch((err) => {
+    res.status(400).send()
+  })
 })
 
 app.listen(3000, () => {
