@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 
-let NameSchema = new mongoose.Schema({
-  name: {
+let FamilynameSchema = new mongoose.Schema({
+  familyName: {
     type: String
   }
 })
 
-NameSchema.statics.getOne = function() {
+FamilynameSchema.statics.getOne = function() {
   let name = this
   return name.find().countDocuments().then((count) => {
     let random = Math.floor(Math.random() * count)
@@ -18,6 +18,6 @@ NameSchema.statics.getOne = function() {
   })
 }
 
-let Name = mongoose.model('Name', NameSchema)
+let FamilyName = mongoose.model('Familyname', FamilynameSchema)
 
-module.exports = {Name}
+module.exports = {FamilyName}

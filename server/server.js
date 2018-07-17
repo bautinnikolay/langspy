@@ -5,6 +5,9 @@ const _ = require('lodash')
 
 let {mongoose} = require('./db/mongoose')
 let {User} = require('./models/user')
+let {FamilyName} = require('./models/familyname')
+let {Name} = require('./models/name')
+let {Character} = require('./models/character')
 let {checkAuth} = require('./middleware/auth')
 
 let app = express()
@@ -59,6 +62,41 @@ app.post('/getme', checkAuth, (req, res) => {
       res.send({userInfo})
     }
   }).catch((err) => {
+    res.status(400).send()
+  })
+})
+
+app.post('/createcharacter', checkAuth, (req, res) => {
+  let character = {}
+  Name.getOne().then((name) => {
+    character.name = name.name
+    return FamilyName.getOne()
+  }).then((familyname) => {
+    character.familyname = familyname.familyName
+    res.status(200).send({character})
+  }).catch((err) => {
+    console.log(err)
+    res.status(400).send({err})
+  })
+})
+
+app.post('/savecharacter', checkAuth, (req, res) => {
+  let body = _.pick(req.body, ['firstName', 'lastName', 'sex', 'interests'])
+  body._owner = req.session.suzie
+  body.createdAt = new Date().getTime()
+  let character = new Character(body)
+  character.save().then((result) => {
+    res.status(200).send({message: 'character created'})
+  }).catch((err) => {
+    res.status(400).send(err)
+  })
+})
+
+app.post('/getcharacters', checkAuth, (req, res) => {
+  Character.getcharacters(req.session.suzie).then((result) => {
+    res.send({result})
+  }).catch((err) => {
+    console.log(err)
     res.status(400).send()
   })
 })

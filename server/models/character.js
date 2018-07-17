@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const _ = require('lodash')
 
 let CharacterSchema = new mongoose.Schema({
   firstName: {
@@ -9,15 +10,36 @@ let CharacterSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  sex: {
+    type: String,
+    required: true
+  },
   interests: {
     type: Array,
     required: true
   },
+  status: {
+    type: Boolean,
+    default: true
+  },
+  createdAt: {
+    type: Number,
+    required: true
+  },
   _owner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true
   }
 })
+
+CharacterSchema.statics.getcharacters = function (ownerId) {
+  let character = this
+  return character.find({_owner: ownerId}).then((result) => {
+    return new Promise((resolve, reject) => {
+      resolve(result)
+    })
+  })
+}
 
 let Character = mongoose.model('Character', CharacterSchema)
 
