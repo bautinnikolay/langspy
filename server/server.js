@@ -5,10 +5,9 @@ const _ = require('lodash')
 
 let {mongoose} = require('./db/mongoose')
 let {User} = require('./models/user')
-let {FamilyName} = require('./models/familyname')
-let {Name} = require('./models/name')
 let {Character} = require('./models/character')
 let {checkAuth} = require('./middleware/auth')
+let {activeCharactersCount, createCharacter, saveCharacter} = require('./middleware/char')
 
 let app = express()
 
@@ -66,30 +65,12 @@ app.post('/getme', checkAuth, (req, res) => {
   })
 })
 
-app.post('/createcharacter', checkAuth, (req, res) => {
-  let character = {}
-  Name.getOne().then((name) => {
-    character.name = name.name
-    return FamilyName.getOne()
-  }).then((familyname) => {
-    character.familyname = familyname.familyName
-    res.status(200).send({character})
-  }).catch((err) => {
-    console.log(err)
-    res.status(400).send({err})
-  })
+app.post('/createcharacter', checkAuth, activeCharactersCount, createCharacter, (req, res) => {
+  res.send(req.character)
 })
 
-app.post('/savecharacter', checkAuth, (req, res) => {
-  let body = _.pick(req.body, ['firstName', 'lastName', 'sex', 'interests'])
-  body._owner = req.session.suzie
-  body.createdAt = new Date().getTime()
-  let character = new Character(body)
-  character.save().then((result) => {
-    res.status(200).send({message: 'character created'})
-  }).catch((err) => {
-    res.status(400).send(err)
-  })
+app.post('/savecharacter', checkAuth, activeCharactersCount, saveCharacter, (req, res) => {
+  res.send()
 })
 
 app.post('/getcharacters', checkAuth, (req, res) => {
