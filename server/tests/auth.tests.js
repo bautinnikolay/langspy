@@ -4,17 +4,17 @@ const request = require('supertest')
 const {app} = require('./../server')
 const {User} = require('./../models/user')
 
-let userOne = {
+const userOne = {
   "email": "test@test.ru",
   "password": "qwerty11",
-  "nickname": "tester",
+  "nickname": "tester1",
   "locale": "ru"
 }
 
-let userTwo = {
+const userTwo = {
   "email": "test@test2.ru",
   "password": "qwerty11",
-  "nickname": "tester",
+  "nickname": "tester1",
   "locale": "ru"
 }
 

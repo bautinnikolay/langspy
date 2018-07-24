@@ -1,21 +1,21 @@
 const _ = require('lodash')
 
-let {Character} = require('./../models/character')
-let {FamilyName} = require('./../models/familyname')
-let {Name} = require('./../models/name')
+const {Character} = require('./../models/character')
+const {FamilyName} = require('./../models/familyname')
+const {Name} = require('./../models/name')
 
-let activeCharactersCount = (req, res, next) => {
+const activeCharactersCount = (req, res, next) => {
   Character.getcharacters(req.session.suzie).then((charList) => {
     let active = charList.filter(char => char.status)
     if(active.length > 0) {
-      res.status(400).send({message: 'You already have one active user'})
+      res.status(403).send({message: 'You already have one active character'})
     } else {
       next()
     }
   })
 }
 
-let createCharacter = (req, res, next) => {
+const createCharacter = (req, res, next) => {
   let character = {}
   Name.getOne().then((name) => {
     character.name = name.name
@@ -29,7 +29,7 @@ let createCharacter = (req, res, next) => {
   })
 }
 
-let saveCharacter = (req, res, next) => {
+const saveCharacter = (req, res, next) => {
   let body = _.pick(req.body, ['firstName', 'lastName', 'sex', 'interests'])
   body._owner = req.session.suzie
   body.createdAt = new Date().getTime()
@@ -41,4 +41,13 @@ let saveCharacter = (req, res, next) => {
   })
 }
 
-module.exports = {activeCharactersCount, createCharacter, saveCharacter}
+const getCharacters = (req, res, next) => {
+  Character.getcharacters(req.session.suzie).then((result) => {
+    req.characters = result
+    next()
+  }).catch((err) => {
+    res.status(400).send()
+  })
+}
+
+module.exports = {activeCharactersCount, createCharacter, saveCharacter, getCharacters}

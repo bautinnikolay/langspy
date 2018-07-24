@@ -18,6 +18,6 @@ FamilynameSchema.statics.getOne = function() {
   })
 }
 
-let FamilyName = mongoose.model('Familyname', FamilynameSchema)
+const FamilyName = mongoose.model('Familyname', FamilynameSchema)
 
 module.exports = {FamilyName}

@@ -41,6 +41,6 @@ CharacterSchema.statics.getcharacters = function (ownerId) {
   })
 }
 
-let Character = mongoose.model('Character', CharacterSchema)
+const Character = mongoose.model('Character', CharacterSchema)
 
 module.exports = {Character}
