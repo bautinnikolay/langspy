@@ -16,7 +16,8 @@ app.use(sess({
   cookie: { expires: new Date(Date.now() + 9000000000) }
 }))
 
-require('./routes')(app)
+require('./routes/auth')(app)
+require('./routes/character')(app)
 
 app.listen(3000, () => {
   console.log(`Started on port 3000`)
