@@ -1,5 +1,4 @@
 const {mongoose} = require('./../db/mongoose')
-const {Character} = require('./../models/character')
 const {checkAuth} = require('./../middleware/auth')
 const {activeCharactersCount, createCharacter, saveCharacter, getCharacters} = require('./../middleware/char')
 

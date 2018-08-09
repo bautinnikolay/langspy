@@ -3,6 +3,7 @@ const request = require('supertest')
 
 const {Character} = require('./../models/character')
 const {app} = require('./../server')
+const {users, seedUsers, removeUsers} = require('./seed/seed')
 
 let character = {
   sex: 'male',
@@ -13,15 +14,19 @@ let cookies
 
 describe('tests for characters methods', () => {
 
+  before(seedUsers)
+
   before((done) => {
     request(app)
       .post('/signin')
-      .send({nickname: 'tester', password: 'qwerty11'})
+      .send({nickname: users[0].nickname, password: users[0].password})
       .end((err, res) => {
         cookies = res.headers['set-cookie'].pop().split(';')[0];
         done()
       })
   })
+
+  after(removeUsers)
 
   it('/createcharacter should return new character first name and last name', (done) => {
     let req = request(app).post('/createcharacter')
@@ -69,7 +74,7 @@ describe('tests for characters methods', () => {
       .end(done)
   })
 
-  it('/getcharacters hould return all user characters', (done) => {
+  it('/getcharacters should return all user characters', (done) => {
     let req = request(app).post('/getcharacters')
     req.cookies = cookies
     req.expect(200)
@@ -105,5 +110,15 @@ describe('tests for characters methods', () => {
     req.send({firstName: character.firstName, lastName: character.lastName})
       .expect(400)
       .end(done)
+  })
+
+  it('/getcharacter should return only active user`s character', (done) => {
+    //TODO
+    done()
+  })
+
+  it('/getcharacter should not return character which isn`t owned by user', (done) => {
+    //TODO
+    done()
   })
 })

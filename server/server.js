@@ -18,6 +18,7 @@ app.use(sess({
 
 require('./routes/auth')(app)
 require('./routes/character')(app)
+require('./routes/message')(app)
 
 app.listen(3000, () => {
   console.log(`Started on port 3000`)
