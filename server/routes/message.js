@@ -2,10 +2,10 @@ const {mongoose} = require('./../db/mongoose')
 const {Conversation} = require('./../models/conversation')
 const {Message} = require('./../models/message')
 const {checkAuth} = require('./../middleware/auth')
-const {getConversation, getConversations, writeMessage} = require('./../middleware/message')
+const {getConversation, checkCharacterOwner, getConversations, writeMessage} = require('./../middleware/message')
 
 module.exports = function(app) {
-  app.post('/sendmessage', checkAuth, getConversation, writeMessage, (req, res) => {
+  app.post('/sendmessage', checkAuth, getConversation, checkCharacterOwner, writeMessage, (req, res) => {
     res.send()
   })
 

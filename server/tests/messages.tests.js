@@ -6,7 +6,7 @@ const {Conversation} = require('./../models/conversation')
 const {app} = require('./../server')
 const {users, characters, seedUsers, seedCharacters, removeUsers, removeChars} = require('./seed/seed')
 
-let cookies
+let cookies = []
 let conversationId
 
 describe('tests for conversations and messages methods', () => {
@@ -18,7 +18,17 @@ describe('tests for conversations and messages methods', () => {
       .post('/signin')
       .send({nickname: users[0].nickname, password: users[0].password})
       .end((err, res) => {
-        cookies = res.headers['set-cookie'].pop().split(';')[0];
+        cookies.push(res.headers['set-cookie'].pop().split(';')[0]);
+        done()
+      })
+  })
+
+  before((done) => {
+    request(app)
+      .post('/signin')
+      .send({nickname: users[1].nickname, password: users[1].password})
+      .end((err, res) => {
+        cookies.push(res.headers['set-cookie'].pop().split(';')[0]);
         done()
       })
   })
@@ -50,7 +60,7 @@ describe('tests for conversations and messages methods', () => {
 
   it('/sendmessage should create new conversation between characterOne and characterTwo', (done) => {
     let req = request(app).post('/sendmessage')
-    req.cookies = cookies
+    req.cookies = cookies[0]
     req.send({fromCharacter: characters[0]._id, toCharacter: characters[1]._id, text: 'Привет друг!'})
       .expect(200)
       .end((err, res) => {
@@ -66,7 +76,7 @@ describe('tests for conversations and messages methods', () => {
 
   it('/sendmessage should send new message in conversation between characterOne and characterTwo and not create new conversation', (done) => {
     let req = request(app).post('/sendmessage')
-    req.cookies = cookies
+    req.cookies = cookies[1]
     req.send({fromCharacter: characters[1]._id, toCharacter: characters[0]._id, text: 'Привет друг!'})
       .expect(200)
       .end((err, res) => {
@@ -86,11 +96,10 @@ describe('tests for conversations and messages methods', () => {
 
   it('/getconversations should return all character`s conversations list', (done) => {
     let req = request(app).post('/getconversations')
-    req.cookies = cookies
+    req.cookies = cookies[0]
     req.send({characterId: characters[0]._id})
       .expect(200)
       .expect((res) => {
-        console.log(res.body)
         expect(res.body.conversations.length).toBe(1)
       })
       .end(done)

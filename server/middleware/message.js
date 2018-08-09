@@ -2,6 +2,7 @@ const _ = require('lodash')
 
 const {Conversation} = require('./../models/conversation')
 const {Message} = require('./../models/message')
+const {Character} = require('./../models/character')
 
 const getConversation = (req, res, next) => {
   let message = _.pick(req.body, ['fromCharacter', 'toCharacter', 'text'])
@@ -26,6 +27,31 @@ const getConversation = (req, res, next) => {
   })
 }
 
+const checkCharacterOwner = (req, res, next) => {
+  if(req.body.characterId) {
+    Character.findOne({_id: req.body.characterId}).then((res) => {
+      if(res._owner === req.session.suzie) {
+        next()
+      } else {
+        res.status(403).send()
+      }
+    }).catch((e) => {
+      res.status(400).send()
+    })
+  }
+  if(req.body.fromCharacter) {
+    Character.findOne({_id: req.body.fromCharacter}).then((res) => {
+      if(res._owner === req.session.suzie) {
+        next()
+      } else {
+        res.status(403).send()
+      }
+    }).catch((e) => {
+      res.status(400).send()
+    })
+  }
+}
+
 const getConversations = (req, res, next) => {
   Conversation.find({users: {$all: [req.body.characterId]}}).then((result) => {
     req.conversations = result
@@ -43,4 +69,4 @@ const writeMessage = (req, res, next) => {
   })
 }
 
-module.exports = {getConversation, writeMessage, getConversations}
+module.exports = {getConversation, checkCharacterOwner, writeMessage, getConversations}
