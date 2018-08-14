@@ -5,22 +5,24 @@ const {Character} = require('../../models/character.js')
 
 const users = [
   {
-    email: "testerOne@mail.net",
+    email: "tester1@mail.net",
     password: "qwerty11",
-    nickname: "testerOne",
+    nickname: "tester1",
     locale: "ru"
   },
   {
-    email: "testerTwo@mail.net",
+    email: "tester2@mail.net",
     password: "qwerty11",
-    nickname: "testerTwo",
+    nickname: "tester2",
+    locale: "ru"
+  },
+  {
+    email: "tester3@mail.net",
+    password: "qwerty11",
+    nickname: "tester3",
     locale: "ru"
   }
 ]
-
-const getNewUser = (user) => {
-  return new User(user)
-}
 
 const characters = [
   {
@@ -37,29 +39,33 @@ const characters = [
     lastName: "Петров",
     sex: "male",
     interests: ["Sex", "Drugs", "Rock`n`roll"],
-    createdAt: new Date().getTime(),
-    _owner: users[1]._id
+    createdAt: new Date().getTime()
+  },
+  {
+    _id: new ObjectID(),
+    firstName: "Василиса",
+    lastName: "Антонова",
+    sex: "female",
+    interests: ["Sex", "Drugs", "Rock`n`roll"],
+    createdAt: new Date().getTime()
   }
 ]
 
 
-//TODO create users fabric
 const seedUsers = (done) => {
-  getNewUser(users[0]).save().then((res) => {
-    users[0]._id = res._id
-    characters[0]._owner = users[0]._id
-    return getNewUser(users[1]).save()
-  }).then((res) => {
-    users[1]._id = res._id
-    characters[1]._owner = users[1]._id
-    done()
-  }).catch((e) => {
-    done(e)
+  users.forEach((item, i, arr) => {
+    new User(item).save().then((res) => {
+      characters[i]._owner = res._id
+      users[i]._id = res._id
+    }).catch((e) => {
+      done(e)
+    })
   })
+  done()
 }
 
 const seedCharacters = (done) => {
-  Character.insertMany(characters).then((err, res) => {
+  Character.insertMany(characters).then((res) => {
     done()
   }).catch((e) => {
     done(e)
@@ -67,24 +73,18 @@ const seedCharacters = (done) => {
 }
 
 const removeUsers = (done) => {
-  User.deleteOne({_id: users[0]._id}).then(() => {
-    return User.deleteOne({_id: users[1]._id})
-  }).then(() => {
-    done()
-  }).catch((e) => {
-    done(e)
+  users.forEach((item, i, arr) => {
+    User.deleteOne({_id: item._id}).then().catch((e) => done(e))
   })
+  done()
 }
 
 
 const removeChars = (done) => {
-  Character.deleteOne({_id: characters[0]._id}).then((err, res) => {
-    return Character.deleteOne({_id: characters[1]._id})
-  }).then((err, res) => {
-    done()
-  }).catch((e) => {
-    done(e)
+  characters.forEach((item, i, arr) => {
+    Character.deleteOne({_id: item._id}).then().catch((e) => done(e))
   })
+  done()
 }
 
 module.exports = {users, characters, seedUsers, seedCharacters, removeUsers, removeChars}

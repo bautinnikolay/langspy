@@ -20,6 +20,10 @@ let MessageSchema = new mongoose.Schema({
   date: {
     type: Number,
     required: true
+  },
+  status: {
+    type: String,
+    required: true
   }
 })
 
