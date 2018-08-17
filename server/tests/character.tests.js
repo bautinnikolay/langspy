@@ -3,7 +3,9 @@ const request = require('supertest')
 
 const {Character} = require('./../models/character')
 const {app} = require('./../server')
-const {users, seedUsers, removeUsers} = require('./seed/seed')
+const getMockData = require('./seed/seed');
+
+const {users, seedUsers, removeUsers} = getMockData();
 
 let character = {
   sex: 'male',
