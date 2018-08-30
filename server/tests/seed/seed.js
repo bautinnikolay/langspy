@@ -3,6 +3,8 @@ const {ObjectID} = require('mongodb')
 const {User} = require('../../models/user.js')
 const {Character} = require('../../models/character.js')
 
+function getMockData() {
+
 const users = [
   {
     email: "tester1@mail.net",
@@ -89,4 +91,9 @@ const removeChars = (done) => {
   done()
 }
 
-module.exports = {users, characters, seedUsers, seedCharacters, removeUsers, removeChars}
+return {users, characters, seedUsers, seedCharacters, removeUsers, removeChars};
+  
+}
+
+module.exports = getMockData;
+
