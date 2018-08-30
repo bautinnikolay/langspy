@@ -104,7 +104,7 @@ const getLastMessages = (req, res, next) => {
   req.conversations.forEach((item, i, arr) => {
     Message.find({conversationId: item._id}).sort({date: 'desc'}).limit(1).then((result) => {
       data.push({conversationId: item._id, message: result[0]})
-      if(i === req.conversations.length-1) {
+      if(data.length === req.conversations.length) {
         data.sort((a, b) => {
           return a.message.date < b.message.date
         })

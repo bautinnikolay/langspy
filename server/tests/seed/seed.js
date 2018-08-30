@@ -57,11 +57,13 @@ const seedUsers = (done) => {
     new User(item).save().then((res) => {
       characters[i]._owner = res._id
       users[i]._id = res._id
+      if(i === users.length-1) {
+        done()
+      }
     }).catch((e) => {
       done(e)
     })
   })
-  done()
 }
 
 const seedCharacters = (done) => {

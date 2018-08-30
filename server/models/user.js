@@ -51,15 +51,15 @@ UserSchema.statics.getUser = function(id) {
 }
 
 UserSchema.statics.signin = function (nickname, password) {
-  let User = this
-  return User.findOne({nickname}).then((user) => {
-    if (!user) {
+  let user = this
+  return user.findOne({nickname: nickname}).then((data) => {
+    if (!data) {
       return Promise.reject('User not found')
     }
     return new Promise((resolve, reject) => {
-      bcrypt.compare(password, user.password, (err, res) => {
+      bcrypt.compare(password, data.password, (err, res) => {
         if(res) {
-          resolve(user)
+          resolve(data)
         } else {
           reject('Password incorrect')
         }
