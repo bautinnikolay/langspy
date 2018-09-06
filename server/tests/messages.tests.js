@@ -4,7 +4,8 @@ const request = require('supertest')
 const {Message} = require('./../models/message')
 const {Conversation} = require('./../models/conversation')
 const {app} = require('./../server')
-const {users, characters, seedUsers, seedCharacters, removeUsers, removeChars} = require('./seed/seed')
+const getMockData = require('./seed/seed')
+const {users, characters, seedUsers, seedCharacters, removeUsers, removeChars} = getMockData()
 
 let cookies = []
 let conversationId
@@ -16,7 +17,7 @@ describe('tests for conversations and messages methods', () => {
   before('logging in fisrt user', (done) => {
     request(app)
       .post('/signin')
-      .send({nickname: users[0].nickname, password: users[0].password})
+      .send({nickname: users[0].nickname, password: "qwerty11"})
       .end((err, res) => {
         cookies.push(res.headers['set-cookie'].pop().split(';')[0]);
         done()
@@ -26,7 +27,7 @@ describe('tests for conversations and messages methods', () => {
   before('logging in second user', (done) => {
     request(app)
       .post('/signin')
-      .send({nickname: users[1].nickname, password: users[1].password})
+      .send({nickname: users[1].nickname, password: "qwerty11"})
       .end((err, res) => {
         cookies.push(res.headers['set-cookie'].pop().split(';')[0]);
         done()
@@ -111,7 +112,7 @@ describe('tests for conversations and messages methods', () => {
     before('logging in third user', (done) => {
       request(app)
         .post('/signin')
-        .send({nickname: users[2].nickname, password: users[2].password})
+        .send({nickname: users[2].nickname, password: "qwerty11"})
         .end((err, res) => {
           cookies.push(res.headers['set-cookie'].pop().split(';')[0]);
           done()

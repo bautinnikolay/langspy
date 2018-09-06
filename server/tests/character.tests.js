@@ -3,7 +3,7 @@ const request = require('supertest')
 
 const {Character} = require('./../models/character')
 const {app} = require('./../server')
-const getMockData = require('./seed/seed');
+const getMockData = require('./seed/seed')
 
 const {users, seedUsers, removeUsers} = getMockData();
 
@@ -21,7 +21,7 @@ describe('tests for characters methods', () => {
   before((done) => {
     request(app)
       .post('/signin')
-      .send({nickname: users[0].nickname, password: users[0].password})
+      .send({nickname: users[0].nickname, password: "qwerty11"})
       .end((err, res) => {
         cookies = res.headers['set-cookie'].pop().split(';')[0];
         done()
