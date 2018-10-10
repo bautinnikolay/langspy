@@ -15,7 +15,7 @@ const getConversation = (req, res, next) => {
         req.message = message
         next()
       }).catch((e) => {
-        res.status(400).send('Some error with create new conversation')
+        res.status(400).send({error: 'Some error with create new conversation ' + e})
       })
     } else {
       message.conversationId = result._id
@@ -23,7 +23,7 @@ const getConversation = (req, res, next) => {
       next()
     }
   }).catch((e) => {
-    res.status(400).send('Some error with find or create conversation')
+    res.status(400).send({error: 'Some error with find or create conversation ' + e})
   })
 }
 
