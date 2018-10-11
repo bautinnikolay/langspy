@@ -50,4 +50,16 @@ const getCharacters = (req, res, next) => {
   })
 }
 
-module.exports = {activeCharactersCount, createCharacter, saveCharacter, getCharacters}
+const isOwner = (req, res, next) => {
+  Character.findOne({_id: req.body._owner, _owner: req.session.suzie}).then((result) => {
+    if(result) {
+      next()
+    } else {
+      res.status(403).send()
+    }
+  }).catch((err) => {
+    res.status(400).send({error: err})
+  })
+}
+
+module.exports = {activeCharactersCount, createCharacter, saveCharacter, getCharacters, isOwner}
