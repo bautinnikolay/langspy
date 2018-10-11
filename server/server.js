@@ -20,7 +20,7 @@ require('./routes/auth')(app)
 require('./routes/character')(app)
 require('./routes/message')(app)
 
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log(`Started on port 3000`)
 })
 

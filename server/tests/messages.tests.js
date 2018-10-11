@@ -127,13 +127,16 @@ describe('tests for conversations and messages methods', () => {
           if(err) {
             done(err)
           }
-          done()
+          Conversation.find({users: {$all: [characters[0]._id.toString(), characters[2]._id.toString()]}}).then((data) => {
+            secondaryConversation = data[0]._id.toString()
+            done()
+          })
         })
     })
 
     after('delete third user`s conversation and message from db', (done) => {
       Message.remove({fromCharacter: characters[2]._id}).then(() => {
-        return Conversation.remove({user: {$all: [characters[0]._id, characters[2]._id]}})
+        return Conversation.remove({_id: secondaryConversation})
       }).then(() => {
         done()
       }).catch((e) => {
