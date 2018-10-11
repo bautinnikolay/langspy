@@ -4,7 +4,7 @@ const {createUser, loginUser, checkAuth} = require('./../middleware/auth')
 
 module.exports = function(app) {
   app.post('/signup', createUser, (req, res) => {
-    res.send()
+    res.send({nickname: req.nickname})
   })
 
   app.post('/signin', loginUser, (req, res) => {
@@ -19,7 +19,7 @@ module.exports = function(app) {
   app.post('/getme', checkAuth, (req, res) => {
     User.getUser(req.session.suzie).then((userInfo) => {
       if(!userInfo.err) {
-        res.send({userInfo})
+        res.send({userInfo: userInfo})
       }
     }).catch((err) => {
       res.status(400).send()

@@ -6,6 +6,7 @@ const createUser = (req, res, next) => {
   let user = new User(body)
   user.save().then((result) => {
     req.session.suzie = result._id
+    req.nickname = user.nickname
     next()
   }).catch((err) => {
     let error = 'none'

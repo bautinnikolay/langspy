@@ -38,7 +38,7 @@ describe('tests for posts methods', () => {
   })
 
   after('delete created tests notes', (done) => {
-    Note.deleteMany({_owner: characters[0]._id}).then(() => done())
+    Note.deleteMany({_owner: {$in: [characters[0]._id.toString(), characters[1]._id.toString()]}}).then(() => done())
   })
   after('delete test-characters from db', removeChars)
   after('delete test-users from db', removeUsers)
