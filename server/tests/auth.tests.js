@@ -134,11 +134,14 @@ describe('tests for auth and register methods', () => {
         })
     })
 
-    it('should return 403 forbidden to not authorize user', (done) => {
+    it('should return userInfo=false to not authorize user', (done) => {
       request(app)
         .post('/getme')
         .send()
-        .expect(403)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.userInfo).toBeFalsy()
+        })
         .end(done)
     })
   })

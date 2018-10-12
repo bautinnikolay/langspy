@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Registerform from './components/registerform'
+import Loginform from './components/loginform'
+import Userbar from './components/userbar'
 
 class App extends Component {
 
@@ -8,14 +10,10 @@ class App extends Component {
     super(props)
     this.state = {
       isLogin: false,
-      login: "",
-      password: "",
       nickname: "",
     }
 
-    this.handleLogin = this.handleLogin.bind(this)
-    this.handlePass = this.handlePass.bind(this)
-    this.submitLogin = this.submitLogin.bind(this)
+    this.changeStatus = this.changeStatus.bind(this)
   }
 
   componentDidMount() {
@@ -33,58 +31,24 @@ class App extends Component {
     }).catch((e) => console.log(e))
   }
 
-  submitLogin(event) {
-    event.preventDefault()
-    fetch('/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: this.state.login,
-        password: this.state.password,
-        nickname: 'testboy',
-        locale: 'ru'
-      })
-    }).then((res) => {
-      return res.json()
-    }).then((data) => {
-      this.setState({isLogin: true, login: '', password: '', nickname: data.nickname})
-    })
-  }
-
-  handleLogin(event) {
-    this.setState({login: event.target.value})
-  }
-
-  handlePass(event) {
-    this.setState({password: event.target.value})
+  changeStatus(login, nickname) {
+    this.setState({isLogin: login, nickname: nickname})
   }
 
   render() {
-    if(this.state.isLogin) {
-      return (
-        <div className="app">
-          <h2>Hello {this.state.nickname}</h2>
+    const isLogin = this.state.isLogin
+    return (
+      <div>
+      {isLogin ? (
+        <Userbar nickname={this.state.nickname} changeStatus={this.changeStatus} />
+      ) : (
+        <div>
+          <Registerform changeStatus={this.changeStatus}/>
+          <Loginform changeStatus={this.changeStatus}/>
         </div>
-      )
-    } else {
-      return (
-        <div className="App">
-            <form onSubmit={this.submitLogin}>
-              <label>
-                Email:
-                <input type="text" value={this.state.login} onChange={this.handleLogin} />
-              </label>
-              <label>
-                Password:
-                <input type="password" value={this.state.password} onChange={this.handlePass} />
-              </label>
-              <input type="submit" value="Log in" />
-            </form>
-        </div>
-      );
-    }
+      )}
+      </div>
+    )
   }
 }
 

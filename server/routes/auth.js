@@ -8,7 +8,7 @@ module.exports = function(app) {
   })
 
   app.post('/signin', loginUser, (req, res) => {
-    res.send()
+      res.send({nickname: req.nickname})
   })
 
   app.post('/signout', checkAuth, (req, res) => {
@@ -16,13 +16,17 @@ module.exports = function(app) {
     res.status(200).send()
   })
 
-  app.post('/getme', checkAuth, (req, res) => {
-    User.getUser(req.session.suzie).then((userInfo) => {
-      if(!userInfo.err) {
-        res.send({userInfo: userInfo})
-      }
-    }).catch((err) => {
-      res.status(400).send()
-    })
+  app.post('/getme', (req, res) => {
+    if(req.session.suzie) {
+      User.getUser(req.session.suzie).then((userInfo) => {
+        if(!userInfo.err) {
+          res.send({userInfo: userInfo})
+        }
+      }).catch((err) => {
+        res.status(400).send()
+      })
+    } else {
+      res.send({userInfo: false})
+    }
   })
 }

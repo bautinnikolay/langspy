@@ -23,6 +23,7 @@ const createUser = (req, res, next) => {
 const loginUser = (req, res, next) => {
   User.signin(req.body.nickname, req.body.password).then((result) => {
     req.session.suzie = result._id
+    req.nickname = result.nickname
     next()
   }).catch((err) => {
     res.status(400).send({err})
